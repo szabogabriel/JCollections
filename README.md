@@ -15,6 +15,6 @@ Every default `Map` method is supported.
 
 Removing an object results in removing the unused key part from the tree as well. For
 example: `data.remove("abcd");` will remove the whole `"abcd"` key, as long as no 
-substring of it is used as a key. Should be `"ab"` used as a key, only the remaining 
-substring `"cd"` would be removed as unused. Removing an object makes an optimization
-through the whole structure, thus it ends gradually slows down with the size of the map.
+substring of it is used as a key. Should `"ab"` used as a key, only the remaining substring
+`"cd"` would be removed as unused. Removing an object makes a lookup of unused keys through
+the whole structure, thus it ends gradually slows down with the size of the map.
