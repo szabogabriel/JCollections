@@ -1,17 +1,18 @@
 package com.jcollections.map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.jcollections.map.DecisionTree;
 
 public class DecisionTreeTest {
 	
@@ -24,14 +25,14 @@ public class DecisionTreeTest {
 	
 	@Test
 	public void testEmpty() {
-		assertTrue(data.size() == 0);
+		assertTrue(data.isEmpty());
 	}
 	
 	@Test
 	public void testAddOne() {
 		data.put("alma", "piros");
 		
-		assertTrue(data.size() == 1);
+		assertEquals(data.size(), 1);
 	}
 	
 	@Test
@@ -43,6 +44,7 @@ public class DecisionTreeTest {
 		assertTrue(data.containsKey("szilva"));
 		
 		assertFalse(data.containsKey("alm"));
+		assertFalse(data.containsKey(null));
 	}
 	
 	@Test
@@ -54,6 +56,7 @@ public class DecisionTreeTest {
 		assertTrue(data.containsValue("sarga"));
 		
 		assertFalse(data.containsKey("piro"));
+		assertFalse(data.containsValue(null));
 	}
 	
 	@Test
@@ -64,18 +67,18 @@ public class DecisionTreeTest {
 		assertTrue(data.get("alma").equals("piros"));
 		assertTrue(data.get("almakukac").equals("sarga"));
 		
-		assertTrue(data.get("szilva") == null);
+		assertNull(data.get("szilva"));
 	}
 	
 	@Test
 	public void testClear() {
 		data.put("alma", "piros");
 		
-		assertTrue(data.size() == 1);
+		assertEquals(data.size(), 1);
 		
 		data.clear();
 		
-		assertTrue(data.size() == 0);
+		assertTrue(data.isEmpty());
 	}
 	
 	@Test
@@ -85,7 +88,7 @@ public class DecisionTreeTest {
 		
 		Set<String> keys = data.keySet();
 		
-		assertTrue(keys.size() == 2);
+		assertEquals(keys.size(), 2);
 		assertTrue(keys.contains("alma"));
 		assertTrue(keys.contains("szilva"));
 	}
@@ -97,7 +100,7 @@ public class DecisionTreeTest {
 		
 		Collection<String> vals = data.values();
 		
-		assertTrue(vals.size() == 2);
+		assertEquals(vals.size(), 2);
 		assertTrue(vals.contains("piros"));
 		assertTrue(vals.contains("kek"));
 	}
@@ -109,14 +112,14 @@ public class DecisionTreeTest {
 		
 		Collection<String> vals = data.values();
 		
-		assertTrue(vals.size() == 2);
+		assertEquals(vals.size(), 2);
 		assertTrue(vals.contains("piros"));
 		
 		data.remove("alma");
 		
 		vals = data.values();
 		
-		assertTrue(vals.size() == 1);
+		assertEquals(vals.size(), 1);
 		assertFalse(vals.contains("piros"));
 		assertTrue(vals.contains("kek"));
 		
@@ -130,30 +133,69 @@ public class DecisionTreeTest {
 		
 		vals = data.values();
 		
-		assertTrue(vals.size() == 2);
+		assertEquals(vals.size(), 2);
 		assertTrue(vals.contains("piros"));
 		
 		data.remove("al");
 		
 		vals = data.values();
 		
-		assertTrue(vals.size() == 1);
+		assertEquals(vals.size(), 1);
 		assertTrue(vals.contains("piros"));
 	}
 	
+	@Test
+	public void removeFromEmpty() {
+		String tmp = data.remove("test");
+		
+		assertNull(tmp);
+	}
+	
+	@Test
 	public void testEntrySet() {
 		data.put("alma", "piros");
 		data.put("szilva", "kek");
 		
 		Set<Entry<String, String>> es = data.entrySet();
 		
-		assertTrue(es.size() == 2);
+		assertEquals(es.size(), 2);
 		for (Entry<String, String> it : es) {
 			if (it.getKey().equals("alma"))
 				assertTrue(it.getValue().equals("piros"));
 			if (it.getKey().equals("szilva"))
 				assertTrue(it.getValue().equals("kek"));
 		}
+	}
+	
+	@Test
+	public void removeInvalidKey() {
+		data.put("alma", "piros");
+		data.put("szilva", "kek");
+		
+		assertNull(data.remove("alfa"));
+	}
+	
+	@Test
+	public void putAll() {
+		Map<String, String> toPut = new HashMap<>();
+		toPut.put("alma", "piros");
+		toPut.put("szilva", "kek");
+		
+		data.putAll(toPut);
+		
+		assertEquals(data.size(), 2);
+		assertTrue(data.containsKey("alma"));
+		assertTrue(data.containsKey("szilva"));
+		assertTrue(data.containsValue("piros"));
+		assertTrue(data.containsValue("kek"));
+	}
+	
+	@Test
+	public void testIsEmpty() {
+		assertTrue(data.isEmpty());
+		
+		data.put("alma", "piros");
+		assertFalse(data.isEmpty());
 	}
 
 }

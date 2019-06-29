@@ -69,7 +69,7 @@ public class DecisionTree<T> implements Map<String, T> {
 			ret.add(new MapEntry(keysSoFar, leaf));
 		
 		for (Character it : children.keySet())
-			ret.addAll(entrySet((keysSoFar == null ? "" : keysSoFar) + it));
+			ret.addAll(children.get(it).entrySet((keysSoFar == null ? "" : keysSoFar) + it));
 		
 		return ret;
 	}
@@ -100,7 +100,7 @@ public class DecisionTree<T> implements Map<String, T> {
 		Set<ToRemove> ret = new HashSet<>();
 		
 		if (children.isEmpty() && empty.length() > 0 && leaf == null)
-			ret.add(new ToRemove(pathSoFar, empty));
+					ret.add(new ToRemove(pathSoFar, empty));
 		else {
 			String nextEmpty = (leaf != null ? "" : empty);
 			for (Character it : children.keySet()) {
@@ -113,11 +113,10 @@ public class DecisionTree<T> implements Map<String, T> {
 	}
 	
 	private void cleanupEmptyPath(String fullKey, String subKey) {
-		if (fullKey.length() > 0 && fullKey.equals(subKey))
+		if (fullKey.equals(subKey))
 			children.remove(fullKey.charAt(0));
 		else
-			if (fullKey.length() > 0 && children.containsKey(fullKey.charAt(0)))
-				children.get(fullKey.charAt(0)).cleanupEmptyPath(fullKey.substring(1), subKey);
+			children.get(fullKey.charAt(0)).cleanupEmptyPath(fullKey.substring(1), subKey);
 	}
 	
 
@@ -139,7 +138,10 @@ public class DecisionTree<T> implements Map<String, T> {
 	}
 	@Override
 	public boolean containsKey(Object key) {
-		return get(key.toString()) != null;
+		if (key != null)
+			return get(key.toString()) != null;
+		
+		return false;
 	}
 	@Override
 	public boolean containsValue(Object value) {
@@ -202,7 +204,7 @@ public class DecisionTree<T> implements Map<String, T> {
 		
 		public MapEntry(String key, T value) {
 			this.key = key;
-			this.value = value;
+			setValue(value);
 		}
 		
 		@Override
